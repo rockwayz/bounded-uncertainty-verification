@@ -42,6 +42,9 @@ Lean 4 (`v4.32.0-rc1`); mathlib is pinned by commit in `lakefile.toml` and locke
     lake exe cache get   # fetch mathlib's prebuilt oleans (~minutes, not hours)
     lake build
 
-Success = the module type-checks with no `sorry`. `check.sh` is the author's fast local
-loop — it type-checks the single module directly via `LEAN_PATH` against a local mathlib
-checkout (paths are local to the author's machine).
+Success = the module type-checks with no `sorry`. `check.sh` is a fast local loop — it
+type-checks the single module directly via `LEAN_PATH` against a prebuilt mathlib
+checkout. Point `MATHLIB_DIR` at your mathlib4 checkout (default: `~/mathlib4`), built
+with the toolchain in `lean-toolchain`, from which the `lean` binary is derived:
+
+    MATHLIB_DIR=/path/to/mathlib4 ./check.sh VCalc/Basic.lean
