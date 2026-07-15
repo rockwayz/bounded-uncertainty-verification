@@ -7,3 +7,4 @@ authors:
     given-names: "Simon"
 repository-code: "https://github.com/rockwayz/bounded-uncertainty-verification"
 doi: 10.5281/zenodo.21368547
+license: Apache-2.0
