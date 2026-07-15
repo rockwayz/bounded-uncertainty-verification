@@ -1,0 +1,40 @@
+# bounded-uncertainty-verification
+
+Lean 4 formalization of the four-state verification-output calculus from:
+
+> Dolera, Simon. **Bounded-Uncertainty Verification for Artificial Intelligence Systems:
+> An Honest Output Classification Grounded in Formal Impossibility Results.**
+> Working paper, v1, July 2026. Zenodo.
+> DOI: [10.5281/zenodo.21341445](https://doi.org/10.5281/zenodo.21341445)
+
+## What this proves
+
+The paper argues that a binary safe/unsafe verdict on an AI system is a lie of omission —
+Rice's theorem (generalized to abstract semantics by Baldan–Ranzato–Zhang) makes every
+non-trivial semantic property undecidable, so honest assurance must report the epistemic
+status of a verdict alongside the verdict. This repository machine-checks the calculus
+that claim rests on. A single module, [`VCalc/Basic.lean`](VCalc/Basic.lean), defines the
+four output states (PROVEN, APPROXIMATION, ESCALATED, TERMINATED) with non-evaluation
+(SKIPPED) structurally unrepresentable as assurance, certificates carrying scope and a
+per-mechanism residual-risk ledger, and a composition operation with the
+Dwork–Rothblum–Vadhan advanced-composition bound evaluated as a query-time accountant
+over the whole ledger — the design that preserves the bound's √k growth, which a naively
+iterated binary bound destroys. Four theorems are proved with no `sorry`: composition is
+associative; the four states are exhaustive and mutually exclusive; accounted risk is
+monotone (a budget, once exhausted, stays exhausted); and an exhausted budget can never
+issue an APPROXIMATION — issuance degrades to ESCALATED or TERMINATED, never to a diluted
+risk claim. On homogeneous ledgers the accountant's value equals the paper's DRV bound
+exactly, with zero unformalized assumptions; on heterogeneous ledgers it evaluates at
+worst-case ε, an over-approximation whose DP-soundness is cited, not formalized — the one
+assumption boundary, labeled in the source where it lives.
+
+## Checking
+
+Lean 4 (`v4.32.0-rc1`) with mathlib. The module type-checks against a prebuilt local
+mathlib checkout; `check.sh` (paths are local to the author's machine) runs the check
+directly via `LEAN_PATH`, avoiding a full `lake build` of mathlib:
+
+    ./check.sh VCalc/Basic.lean
+
+Clean exit with no output = the module type-checks with no `sorry`. With your own mathlib
+checkout, point `lakefile.toml`'s path dependency (and the two paths in `check.sh`) at it.
