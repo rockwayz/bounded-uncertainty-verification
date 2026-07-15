@@ -3,7 +3,10 @@ defaultTargets = ["VCalc"]
 
 [[require]]
 name = "mathlib"
-path = "../mathlib4"
+git = "https://github.com/leanprover-community/mathlib4"
+# Pinned to the exact commit the module was developed and verified against
+# (toolchain leanprover/lean4:v4.32.0-rc1 — see lean-toolchain).
+rev = "a98f92c4fcb4fd3d59ebedb7d1efb9b5bb7a2695"
 
 [[lean_lib]]
 name = "VCalc"

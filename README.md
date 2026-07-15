@@ -1,5 +1,7 @@
 # bounded-uncertainty-verification
 
+[![CI](https://github.com/rockwayz/bounded-uncertainty-verification/actions/workflows/ci.yml/badge.svg)](https://github.com/rockwayz/bounded-uncertainty-verification/actions/workflows/ci.yml)
+
 Lean 4 formalization of the four-state verification-output calculus from:
 
 > Dolera, Simon. **Bounded-Uncertainty Verification for Artificial Intelligence Systems:
@@ -30,11 +32,12 @@ assumption boundary, labeled in the source where it lives.
 
 ## Checking
 
-Lean 4 (`v4.32.0-rc1`) with mathlib. The module type-checks against a prebuilt local
-mathlib checkout; `check.sh` (paths are local to the author's machine) runs the check
-directly via `LEAN_PATH`, avoiding a full `lake build` of mathlib:
+Lean 4 (`v4.32.0-rc1`); mathlib is pinned by commit in `lakefile.toml` and locked in
+`lake-manifest.json`. Reproducible build (what CI runs on every push):
 
-    ./check.sh VCalc/Basic.lean
+    lake exe cache get   # fetch mathlib's prebuilt oleans (~minutes, not hours)
+    lake build
 
-Clean exit with no output = the module type-checks with no `sorry`. With your own mathlib
-checkout, point `lakefile.toml`'s path dependency (and the two paths in `check.sh`) at it.
+Success = the module type-checks with no `sorry`. `check.sh` is the author's fast local
+loop — it type-checks the single module directly via `LEAN_PATH` against a local mathlib
+checkout (paths are local to the author's machine).

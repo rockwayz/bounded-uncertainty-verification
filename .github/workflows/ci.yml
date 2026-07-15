@@ -1,0 +1,14 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Installs the pinned toolchain from lean-toolchain, fetches the mathlib
+      # build cache (lake exe cache get), then runs `lake build`.
+      - uses: leanprover/lean-action@v1
