@@ -9,9 +9,10 @@ Lean 4 formalization of the four-state verification-output calculus from:
 > Working paper, v1, July 2026. Zenodo.
 > DOI: [10.5281/zenodo.21341445](https://doi.org/10.5281/zenodo.21341445)
 
-**Software citation** — this repository, archived on Zenodo (v1.0.0):
-code DOI [10.5281/zenodo.21368548](https://doi.org/10.5281/zenodo.21368548)
-(all versions: [10.5281/zenodo.21368547](https://doi.org/10.5281/zenodo.21368547))
+**Software citation** — this repository, archived on Zenodo:
+code DOI [10.5281/zenodo.21368547](https://doi.org/10.5281/zenodo.21368547)
+(all versions; resolves to the latest release —
+this release, v1.0.1: [10.5281/zenodo.21369153](https://doi.org/10.5281/zenodo.21369153))
 
 ## What this proves
 

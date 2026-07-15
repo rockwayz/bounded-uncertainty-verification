@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata."
+type: software
+title: "bounded-uncertainty-verification"
+authors:
+  - family-names: "Dolera"
+    given-names: "Simon"
+repository-code: "https://github.com/rockwayz/bounded-uncertainty-verification"
+doi: 10.5281/zenodo.21368547
