@@ -9,6 +9,10 @@ Lean 4 formalization of the four-state verification-output calculus from:
 > Working paper, v1, July 2026. Zenodo.
 > DOI: [10.5281/zenodo.21341445](https://doi.org/10.5281/zenodo.21341445)
 
+**Software citation** — this repository, archived on Zenodo (v1.0.0):
+code DOI [10.5281/zenodo.21368548](https://doi.org/10.5281/zenodo.21368548)
+(all versions: [10.5281/zenodo.21368547](https://doi.org/10.5281/zenodo.21368547))
+
 ## What this proves
 
 The paper argues that a binary safe/unsafe verdict on an AI system is a lie of omission —
