@@ -34,9 +34,10 @@
     * exhaustion soundness                                      — Phase 3 / Theorem 4
     * the DRV accounting function `drvEps` / exhaustion check   — Phase 2 (query-time)
 
-  The single most load-bearing design decision — WHY residual risk is a LEDGER
-  (a `List RiskParams`) rather than a baked-in (ε,δ) pair — is documented at
-  `RiskParams` / `Certificate` below. Read that comment first.
+  The load-bearing design point — residual risk as a LEDGER (a `List RiskParams`)
+  with a query-time advanced-composition accountant, which is the paper's §4 design
+  implemented as written — is documented at `RiskParams` / `Certificate` below.
+  Read that comment first.
 -/
 
 import Mathlib.Data.Real.Basic          -- ℝ
@@ -111,36 +112,39 @@ def assuranceContent : State → ℕ
 
 end State
 
-/-! ## 2. Residual risk, and the ledger resolution of the DRV / associativity tension
+/-! ## 2. Residual risk: the ledger and its query-time accountant (the paper's design)
 
 Each APPROXIMATION mechanism carries residual-risk parameters `(ε, δ)` — a bound of the
 form "the reported property holds except with (ε,δ)-differential-privacy-style slack".
 
-THE CENTRAL DESIGN DECISION — WHY A LEDGER, NOT A BAKED-IN (ε,δ) PAIR.
-The paper cites Dwork–Rothblum–Vadhan (FOCS 2010) advanced composition: k mechanisms
-each (ε,δ) compose to
+THE LEDGER IMPLEMENTS THE PAPER AS WRITTEN. The paper (§4) specifies that a ledger
+accumulates composed risk under an advanced-composition accountant, citing
+Dwork–Rothblum–Vadhan (FOCS 2010): k mechanisms each (ε,δ) compose to
 
     ε_g = sqrt(2k · ln(1/δ')) · ε + k · ε · (e^ε − 1),   δ_total = k·δ + δ'.
 
 The leading term grows as sqrt(k), NOT k — that sub-linear growth is the entire reason
-the paper invokes DRV. Baking this bound into a BINARY composition operator is fatal on
-two independently verified counts:
+the paper invokes DRV. This file realizes that spec literally: an APPEND-ONLY LEDGER of
+per-mechanism `RiskParams` on the certificate, with the DRV bound as an ACCOUNTING
+FUNCTION evaluated ONCE over the whole ledger at query time (k = ledger length) — the
+standard differential-privacy accountant pattern. Ledger append is associative by
+construction (`List.append_assoc`) and does no DRV arithmetic; the accounting function
+itself is Phase 2, and here we only fix the ledger type it consumes.
+
+WHY THE BOUND IS NOT BAKED INTO A BINARY ∘. A naive alternative reading — a binary
+composition operator carrying the DRV formula inside — is ruled out on two
+independently verified counts (facts about that reading, not defects in the paper,
+whose ledger-plus-accountant design never has this problem):
   (1) ILL-TYPED: the formula is HOMOGENEOUS ("k mechanisms EACH (ε,δ)", one shared ε);
       two certificates with different ε have no shared ε to substitute.
   (2) NON-ASSOCIATIVE AND SELF-DEFEATING: iterating a binary DRV bound reintroduces
       linear-or-worse growth. Measured at ε=0.1, δ=δ'=1e-6: one-shot k=3 gives
       ε_g = 0.942, but folding a binary bound (2 then 2) gives 7.437 — 7.9× worse. That
       destroys the sqrt(k) advantage the bound exists to provide.
+The query-time accountant recovers the honest one-shot 0.942 and can never produce the
+iterated 7.437.
 
-RESOLUTION (the real differential-privacy accountant pattern): residual risk is an
-APPEND-ONLY LEDGER of per-mechanism `RiskParams`. Composition (Phase 2) will *append*
-ledgers — append is associative by construction (`List.append_assoc`), does no DRV
-arithmetic, and so can never reintroduce the 7.9× blow-up. The DRV bound becomes an
-ACCOUNTING FUNCTION evaluated ONCE over the whole ledger at query time (k = ledger
-length), which recovers the honest one-shot 0.942 and never the iterated 7.437. That
-accounting function is Phase 2; here we only fix the ledger type it consumes.
-
-THE HOMOGENEITY TRAP, and the soundness boundary the paper must state. DRV needs one
+HETEROGENEITY, and the soundness boundary made explicit here. DRV needs one
 shared ε, but a heterogeneous ledger holds many. The Phase-2 accountant will evaluate at
 `ε_max`. That is a SOUND UPPER BOUND *only as a modeling assumption* resting on
 DP's monotonicity in ε (an ε_i-DP mechanism is also ε_max-DP) — which is CITED, not
